@@ -14,7 +14,7 @@ def create_super_admin():
 
         # Create admin user if it does not existed.
         user = User(
-            username="sa_username",
+            nationalID="sa_username",
             password="sa_password",
             email="sa_email@example.com",
             user_role="sa",
@@ -45,7 +45,7 @@ def create_admin_user():
 
         # Create admin user if it does not existed.
         user = User(
-            username="admin_username",
+            nationalID="admin_username",
             password="admin_password",
             email="admin_email@example.com",
             user_role="admin",
@@ -66,7 +66,7 @@ def create_admin_user():
 
 
 def create_test_user(
-    username="test_username",
+    nationalID="test_username",
     password="test_password",
     email="test_email@example.com",
     user_role="user",
@@ -81,7 +81,7 @@ def create_test_user(
         # Create admin user if it does not existed.
         # user = User(username=username, password=password, email=email, user_role=user_role)
         user = User(
-            username=username,
+            nationalID=nationalID,
             password=password,
             email=email,
             user_role=user_role,
@@ -103,3 +103,5 @@ def create_test_user(
 
         # Print admin user status.
         logging.info("User already set.")
+
+

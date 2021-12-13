@@ -7,7 +7,7 @@ from flask_restful import Resource
 import api.error.errors as error
 # from api.conf.auth import auth, refresh_jwt
 from api.database.database import db
-from api.models.models import User
+from api.models.models import DrUser, PtUser
 # from api.roles import role_required
 # from api.schemas.schemas import UserSchema
 
@@ -18,38 +18,39 @@ class Index(Resource):
         return "Hello Flask Restful Example!"
 
 
-class Register(Resource):
+class RegisterDr(Resource):
     @staticmethod
     def post():
 
         try:
             # Get username, password and email.
-            username, password, email = (
-                request.json.get("username").strip(),
+            nationalID, nezamID, password, email = (
+                request.json.get("nationalID").strip(),
+                request.json.get("nezamID").strip(),
                 request.json.get("password").strip(),
                 request.json.get("email").strip(),
             )
         except Exception as why:
 
             # Log input strip or etc. errors.
-            logging.info("Username, password or email is wrong. " + str(why))
+            logging.info("nationalID, nazamID, password or email is wrong. " + str(why))
 
             # Return invalid input error.
             return error.INVALID_INPUT_422
 
         # Check if any field is none.
-        if username is None or password is None or email is None:
+        if nationalID is None or nezamID is None or password is None or email is None:
             return error.INVALID_INPUT_422
 
         # Get user if it is existed.
-        user = User.query.filter_by(email=email).first()
+        user = DrUser.query.filter_by(email=email).first()
 
         # Check if user is existed.
         if user is not None:
             return error.ALREADY_EXIST
 
         # Create a new user.
-        user = User(username=username, password=password, email=email)
+        user = DrUser(nationalID=nationalID, nezamID= nezamID, password=password, email=email)
 
         # Add user to session.
         db.session.add(user)
@@ -58,4 +59,46 @@ class Register(Resource):
         db.session.commit()
 
         # Return success if registration is completed.
-        return {"status": "registration completed."}
+        return {"status": "Doctor registration completed."}
+
+class RegisterPt(Resource):
+    @staticmethod
+    def post():
+
+        try:
+            # Get username, password and email.
+            nationalID, password, email = (
+                request.json.get("nationalID").strip(),
+                request.json.get("password").strip(),
+                request.json.get("email").strip(),
+            )
+        except Exception as why:
+
+            # Log input strip or etc. errors.
+            logging.info("NationalID, password or email is wrong. " + str(why))
+
+            # Return invalid input error.
+            return error.INVALID_INPUT_422
+
+        # Check if any field is none.
+        if nationalID is None or password is None or email is None:
+            return error.INVALID_INPUT_422
+
+        # Get user if it is existed.
+        user = PtUser.query.filter_by(email=email).first()
+
+        # Check if user is existed.
+        if user is not None:
+            return error.ALREADY_EXIST
+
+        # Create a new user.
+        user = PtUser(nationalID=nationalID, password=password, email=email)
+
+        # Add user to session.
+        db.session.add(user)
+
+        # Commit session.
+        db.session.commit()
+
+        # Return success if registration is completed.
+        return {"status": "Patient registration completed."}

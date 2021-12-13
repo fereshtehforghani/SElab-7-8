@@ -8,7 +8,7 @@ from api.database.database import db
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(length=80))
+    nationalID = db.Column(db.String(length=10))
     password = db.Column(db.String(length=80))
     email = db.Column(db.String(length=80))
     created = db.Column(db.DateTime, default=datetime.utcnow)
@@ -51,3 +51,9 @@ class User(db.Model):
             self.email,
             self.created,
         )
+
+class DrUser(User):
+    nezamID = db.Column(db.String(length=80))
+
+class PtUser(User):
+    pass
