@@ -9,6 +9,7 @@ from api.database.database import db
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nationalID = db.Column(db.String(length=10))
+    name = db.Column(db.String(length=10))
     password = db.Column(db.String(length=80))
     email = db.Column(db.String(length=80))
     created = db.Column(db.DateTime, default=datetime.utcnow)
@@ -25,7 +26,6 @@ class User(db.Model):
 
         return jwt.dumps({"email": self.email, "admin": 0})
 
-    # Generates a new access token from refresh token.
     @staticmethod
     @auth.verify_token
     def verify_auth_token(token):
@@ -42,8 +42,6 @@ class User(db.Model):
         return False
 
     def __repr__(self):
-
-        # This is only for representation how you want to see user information after query.
         return "<User(id='%s', name='%s', password='%s', email='%s', created='%s')>" % (
             self.id,
             self.username,
@@ -52,8 +50,10 @@ class User(db.Model):
             self.created,
         )
 
+
 class DrUser(User):
     nezamID = db.Column(db.String(length=80))
+
 
 class PtUser(User):
     pass

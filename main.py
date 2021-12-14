@@ -5,7 +5,7 @@ from api.conf.routes import generate_routes
 from api.database.database import db
 from api.database.db_initializer import (create_admin_user,
                                                create_super_admin,
-                                               create_test_user)
+                                               create_test_patient_user)
 
 
 def create_app():
@@ -20,7 +20,7 @@ def create_app():
         db.create_all()
         create_super_admin()
         create_admin_user()
-        create_test_user()
+        create_test_patient_user()
     return app
 
 

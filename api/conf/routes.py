@@ -1,10 +1,12 @@
 from flask_restful import Api
 
-from api.handlers.UserHandlers import (
+from api.services.UserServices import (
     Index,
     RegisterDr,
     RegisterPt,
-    Login)
+    Login,
+    DrProfile,
+    PtProfile)
 
 
 def generate_routes(app):
@@ -17,12 +19,16 @@ def generate_routes(app):
     api.add_resource(Index, "/")
 
     # Register page.
-    api.add_resource(RegisterDr, "/v1/auth/registerDr")
-    api.add_resource(RegisterPt, "/v1/auth/registerPt")
+    api.add_resource(RegisterDr, "/auth/registerDr")
+    api.add_resource(RegisterPt, "/auth/registerPt")
 
 
-    # # Login page.
-    api.add_resource(Login, "/v1/auth/login")
+    # Login page.
+    api.add_resource(Login, "/auth/login")
+
+    # Profile
+    api.add_resource(DrProfile, "/profileDr")
+    api.add_resource(PtProfile, "/profilePt")
     #
     # # Logout page.
     # api.add_resource(Logout, "/v1/auth/logout")
