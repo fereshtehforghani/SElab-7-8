@@ -111,15 +111,11 @@ class Login(Resource):
 
         else:
             return error.INVALID_INPUT_422
-        refresh_token = refresh_jwt.dumps({"email": email})
-        return {
-            "access_token": access_token.decode(),
-            "refresh_token": refresh_token.decode(),
-        }
+        return {"access_token": access_token.decode()}
 
 
 class DrProfile(Resource):
-    @auth.login_required
+    # @auth.login_required
     def get(self):
         try:
             nationalID = request.args.get("nationalID")
