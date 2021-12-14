@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime
+import jsonify
 
 from flask import g, request
 from flask_restful import Resource
@@ -9,7 +10,7 @@ from api.conf.auth import auth, refresh_jwt
 from api.database.database import db
 from api.models.models import DrUser, PtUser, User
 # from api.roles import role_required
-from api.schemas.schemas import UserSchema, DrUserSchema, PtUserSchema
+# from api.schemas.schemas import UserSchema, DrUserSchema, PtUserSchema
 
 
 class Index(Resource):
@@ -115,21 +116,24 @@ class Login(Resource):
 
 
 class DrProfile(Resource):
-    # @auth.login_required
+    @auth.login_required
     def get(self):
-        try:
-            nationalID = request.args.get("nationalID")
-            print(nationalID)
+        # try:
+        #     nationalID = request.args.get("nationalID")
+        #     print(nationalID)
             user = (
-                DrUser.query.filter(DrUser.nationalID.in_(nationalID)).first()
+                DrUser.query.filter_by(email=g.user).first()
             )
-            dr_user_schema = DrUserSchema(many=True)
-            data, errors = dr_user_schema.dump(user)
-            return data
+            # dr_user_schema = DrUserSchema(many=True)
+            # data, errors = dr_user_schema.dump(user)
 
-        except Exception as why:
-            logging.error(why)
-            return error.INVALID_INPUT_422
+            print(user.nationalID)
+
+            return { 'data': 'Hello, %s!' % user.nationalID }
+        # return None
+        # except Exception as why:
+        #     logging.error(why)
+        #     return error.INVALID_INPUT_422
 
 
 class PtProfile(Resource):
@@ -141,9 +145,9 @@ class PtProfile(Resource):
             user = (
                 PtUser.query.filter(PtUser.nationalID.in_(nationalID)).first()
             )
-            pt_user_schema = PtUserSchema(many=True)
-            data, errors = pt_user_schema.dump(user)
-            return data
+            # pt_user_schema = PtUserSchema(many=True)
+            # data, errors = pt_user_schema.dump(user)
+            return {"name"}
 
         except Exception as why:
             logging.error(why)
