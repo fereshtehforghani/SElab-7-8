@@ -118,37 +118,14 @@ class Login(Resource):
 class DrProfile(Resource):
     @auth.login_required
     def get(self):
-        # try:
-        #     nationalID = request.args.get("nationalID")
-        #     print(nationalID)
-            user = (
-                DrUser.query.filter_by(email=g.user).first()
-            )
-            # dr_user_schema = DrUserSchema(many=True)
-            # data, errors = dr_user_schema.dump(user)
-
-            print(user.nationalID)
-
-            return { 'data': 'Hello, %s!' % user.nationalID }
-        # return None
-        # except Exception as why:
-        #     logging.error(why)
-        #     return error.INVALID_INPUT_422
+        user = (DrUser.query.filter_by(email=g.user).first())
+        print(user.nationalID)
+        return {'NationalID': '%s!' % user.nationalID, 'Name': '%s!' % user.name, 'Email': '%s!' % user.email, 'NezamID': '%s!' % user.nezamID}
 
 
 class PtProfile(Resource):
     @auth.login_required
     def get(self):
-        try:
-            nationalID = request.args.get("nationalID")
-            print(nationalID)
-            user = (
-                PtUser.query.filter(PtUser.nationalID.in_(nationalID)).first()
-            )
-            # pt_user_schema = PtUserSchema(many=True)
-            # data, errors = pt_user_schema.dump(user)
-            return {"name"}
-
-        except Exception as why:
-            logging.error(why)
-            return error.INVALID_INPUT_422
+        user = (PtUser.query.filter_by(email=g.user).first())
+        print(user.nationalID)
+        return {'NationalID': '%s!' % user.nationalID, 'Name': '%s!' % user.name, 'Email': '%s!' % user.email}
