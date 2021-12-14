@@ -3,7 +3,8 @@ from flask_restful import Api
 from api.handlers.UserHandlers import (
     Index,
     RegisterDr,
-    RegisterPt)
+    RegisterPt,
+    Login)
 
 
 def generate_routes(app):
@@ -21,7 +22,7 @@ def generate_routes(app):
 
 
     # # Login page.
-    # api.add_resource(Login, "/v1/auth/login")
+    api.add_resource(Login, "/v1/auth/login")
     #
     # # Logout page.
     # api.add_resource(Logout, "/v1/auth/logout")
