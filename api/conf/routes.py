@@ -6,7 +6,8 @@ from api.services.UserServices import (
     RegisterPt,
     Login,
     DrProfile,
-    PtProfile)
+    PtProfile,
+    DrList, PtList)
 
 
 def generate_routes(app):
@@ -14,7 +15,6 @@ def generate_routes(app):
     # Create api.
     api = Api(app)
 
-    # Add all routes resources.
     # Index page.
     api.add_resource(Index, "/")
 
@@ -22,31 +22,13 @@ def generate_routes(app):
     api.add_resource(RegisterDr, "/auth/registerDr")
     api.add_resource(RegisterPt, "/auth/registerPt")
 
-
     # Login page.
     api.add_resource(Login, "/auth/login")
 
     # Profile
     api.add_resource(DrProfile, "/profileDr")
     api.add_resource(PtProfile, "/profilePt")
-    #
-    # # Logout page.
-    # api.add_resource(Logout, "/v1/auth/logout")
-    #
-    # # Refresh page.
-    # api.add_resource(RefreshToken, "/v1/auth/refresh")
-    #
-    # # Password reset page. Not forgot.
-    # api.add_resource(ResetPassword, "/v1/auth/password_reset")
-    #
-    # # Example user handler for user permission.
-    # api.add_resource(DataUserRequired, "/data_user")
-    #
-    # # Example admin handler for admin permission.
-    # api.add_resource(DataAdminRequired, "/data_admin")
-    #
-    # # Example user handler for user permission.
-    # api.add_resource(DataSuperAdminRequired, "/data_super_admin")
-    #
-    # # Get users page with admin permissions.
-    # api.add_resource(UsersData, "/users")
+
+    # lists
+    api.add_resource(DrList, "/admin/listDr")
+    api.add_resource(PtList, "/admin/listPt")

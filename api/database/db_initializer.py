@@ -5,7 +5,7 @@ from api.models.models import User, PtUser
 
 
 def create_super_admin():
-    user = User.query.filter_by(email="test_username").first()
+    user = User.query.filter_by(email="sa_email@example.com").first()
     if user is None:
         user = User(
             nationalID="sa_username",
@@ -22,7 +22,7 @@ def create_super_admin():
 
 
 def create_admin_user():
-    user = User.query.filter_by(email="admin").first()
+    user = User.query.filter_by(email="admin_email@example.com").first()
     if user is None:
         user = User(
             nationalID="admin_username",
@@ -46,7 +46,7 @@ def create_test_patient_user(
     user_role="user",
 ):
 
-    user = User.query.filter_by(email="test_username").first()
+    user = PtUser.query.filter_by(email="test_email@example.com").first()
 
     if user is None:
         # user = User(username=username, password=password, email=email, user_role=user_role)

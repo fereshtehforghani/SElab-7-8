@@ -1,16 +1,14 @@
 import logging
-from datetime import datetime
-import jsonify
+# import jsonify
 
 from flask import g, request
 from flask_restful import Resource
 
 import api.error.errors as error
-from api.conf.auth import auth, refresh_jwt
+from api.conf.auth import auth
 from api.database.database import db
 from api.models.models import DrUser, PtUser, User
-# from api.roles import role_required
-# from api.schemas.schemas import UserSchema, DrUserSchema, PtUserSchema
+from api.roles import role_required
 
 
 class Index(Resource):
@@ -129,3 +127,37 @@ class PtProfile(Resource):
         user = (PtUser.query.filter_by(email=g.user).first())
         print(user.nationalID)
         return {'NationalID': '%s!' % user.nationalID, 'Name': '%s!' % user.name, 'Email': '%s!' % user.email}
+
+
+class DrList(Resource):
+    @auth.login_required
+    @role_required.permission(1)
+    def get(self):
+        try:
+            user_json = {}
+            users = DrUser.query.all()
+            for user in users:
+                user_json["%s" % user.id] = {'NationalID': '%s!' % user.nationalID, 'Name': '%s!' % user.name, 'Email': '%s!' % user.email}
+            print(user_json)
+            return user_json
+
+        except Exception as why:
+            logging.error(why)
+            return error.INVALID_INPUT_422
+
+
+class PtList(Resource):
+    @auth.login_required
+    @role_required.permission(1)
+    def get(self):
+        try:
+            user_json = {}
+            users = PtUser.query.all()
+            for user in users:
+                user_json["%s" % user.id] = {'NationalID': '%s!' % user.nationalID, 'Name': '%s!' % user.name, 'Email': '%s!' % user.email}
+            print(user_json)
+            return user_json
+
+        except Exception as why:
+            logging.error(why)
+            return error.INVALID_INPUT_422

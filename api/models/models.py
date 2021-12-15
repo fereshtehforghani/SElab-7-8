@@ -42,9 +42,10 @@ class User(db.Model):
         return False
 
     def __repr__(self):
-        return "<User(id='%s', name='%s', password='%s', email='%s', created='%s')>" % (
+        return "<User(id='%s', nationalID='%s', name='%s', password='%s', email='%s', created='%s')>" % (
             self.id,
-            self.username,
+            self.nationalID,
+            self.name,
             self.password,
             self.email,
             self.created,
@@ -53,6 +54,16 @@ class User(db.Model):
 
 class DrUser(User):
     nezamID = db.Column(db.String(length=80))
+
+    def __repr__(self):
+        return "<User(id='%s', nationalID='%s', name='%s', nezamID='%s', email='%s', created='%s')>" % (
+            self.id,
+            self.nationalID,
+            self.name,
+            self.nezamID,
+            self.email,
+            self.created,
+        )
 
 
 class PtUser(User):
