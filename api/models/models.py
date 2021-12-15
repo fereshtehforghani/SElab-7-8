@@ -1,12 +1,14 @@
 from datetime import datetime
 
 from flask import g
+from sqlalchemy import ForeignKey
 
 from api.conf.auth import auth, jwt
 from api.database.database import db
 
 
 class User(db.Model):
+    __tablename__ = 'User'
     id = db.Column(db.Integer, primary_key=True)
     nationalID = db.Column(db.String(length=10))
     name = db.Column(db.String(length=10))
@@ -19,11 +21,9 @@ class User(db.Model):
         if permission_level == 1:
             token = jwt.dumps({"email": self.email, "admin": 1})
             return token
-
         elif permission_level == 2:
             token = jwt.dumps({"email": self.email, "admin": 2})
             return token
-
         return jwt.dumps({"email": self.email, "admin": 0})
 
     @staticmethod
@@ -34,7 +34,6 @@ class User(db.Model):
             data = jwt.loads(token)
         except:
             return False
-
         if "email" and "admin" in data:
             g.user = data["email"]
             g.admin = data["admin"]
@@ -53,7 +52,9 @@ class User(db.Model):
 
 
 class DrUser(User):
-    nezamID = db.Column(db.String(length=80))
+    __tablename__ = 'DrUser'
+    dr_id = db.Column(db.Integer, ForeignKey('User.id'), primary_key=True)
+    nezamID = db.Column(db.String(length=80), unique=True)
 
     def __repr__(self):
         return "<User(id='%s', nationalID='%s', name='%s', nezamID='%s', email='%s', created='%s')>" % (
@@ -67,4 +68,5 @@ class DrUser(User):
 
 
 class PtUser(User):
-    pass
+    __tablename__ = 'PtUser'
+    Pt_id = db.Column(db.Integer, ForeignKey('User.id'), primary_key=True)

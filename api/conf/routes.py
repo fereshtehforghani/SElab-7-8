@@ -7,7 +7,9 @@ from api.services.UserServices import (
     Login,
     DrProfile,
     PtProfile,
-    DrList, PtList)
+    DrList,
+    PtList,
+    AdminProfile)
 
 
 def generate_routes(app):
@@ -26,6 +28,7 @@ def generate_routes(app):
     api.add_resource(Login, "/auth/login")
 
     # Profile
+    api.add_resource(AdminProfile, "/profileAdmin")
     api.add_resource(DrProfile, "/profileDr")
     api.add_resource(PtProfile, "/profilePt")
 
