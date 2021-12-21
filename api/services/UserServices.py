@@ -7,7 +7,7 @@ from flask_restful import Resource
 import api.error.errors as error
 from api.conf.auth import auth
 from api.database.database import db
-from api.models.models import DrUser, PtUser, User
+from api.models.userModels import DrUser, PtUser, User
 from api.roles import role_required
 
 
@@ -38,7 +38,8 @@ class RegisterDr(Resource):
         user = DrUser.query.filter_by(email=email).first()
         if user is not None:
             return error.ALREADY_EXIST
-        user = DrUser(nationalID=nationalID, name=name, nezamID=nezamID, password=password, email=email)
+        user = DrUser(nationalID=nationalID, name=name, nezamID=nezamID, password=password, email=email,
+                      user_role="doctor")
         db.session.add(user)
         db.session.commit()
         return {"status": "Doctor registration completed."}
@@ -64,7 +65,7 @@ class RegisterPt(Resource):
         user = PtUser.query.filter_by(email=email).first()
         if user is not None:
             return error.ALREADY_EXIST
-        user = PtUser(nationalID=nationalID, name=name, password=password, email=email)
+        user = PtUser(nationalID=nationalID, name=name, password=password, email=email, user_role="patient")
         db.session.add(user)
         db.session.commit()
         return {"status": "Patient registration completed."}
@@ -86,8 +87,10 @@ class Login(Resource):
         user = User.query.filter_by(email=email, password=password).first()
         if user is None:
             return error.UNAUTHORIZED
-        if user.user_role == "user":
-            access_token = user.generate_auth_token(0)
+        if user.user_role == "doctor":
+            access_token = user.generate_auth_token(0, doc_or_pat="doctor")
+        elif user.user_role == "patient":
+            access_token = user.generate_auth_token(0, doc_or_pat="patient")
         elif user.user_role == "admin":
             access_token = user.generate_auth_token(1)
         elif user.user_role == "sa":
@@ -157,3 +160,12 @@ class PtList(Resource):
         except Exception as why:
             logging.error(why)
             return error.INVALID_INPUT_422
+
+
+class DrInfo(Resource):
+    @staticmethod
+    def post():
+        dr_id = request.json.get("dr_id")
+        user = DrUser.query.filter_by(dr_id=dr_id).first()
+        print(user)
+        return {'role': 'Doctor', 'Name': '%s' % user.name, 'NezamID': '%s' % user.nezamID}
