@@ -1,6 +1,6 @@
 import logging
 from api.database.database import db
-from api.models.models import User
+from api.models.userModels import User
 
 
 def create_super_admin():

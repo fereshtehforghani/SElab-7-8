@@ -1,5 +1,6 @@
 from flask_restful import Api
 
+from api.services.PrescServices import CreatePrescription
 from api.services.UserServices import (
     Index,
     RegisterDr,
@@ -9,22 +10,23 @@ from api.services.UserServices import (
     PtProfile,
     DrList,
     PtList,
-    AdminProfile)
+    AdminProfile, DrInfo)
+from api.services.aggregator import PatientPrescriptions
 
 
 def generate_routes(app):
 
-    # Create api.
+    # Create api
     api = Api(app)
 
-    # Index page.
+    # Index page
     api.add_resource(Index, "/")
 
-    # Register page.
+    # Register page
     api.add_resource(RegisterDr, "/auth/registerDr")
     api.add_resource(RegisterPt, "/auth/registerPt")
 
-    # Login page.
+    # Login page
     api.add_resource(Login, "/auth/login")
 
     # Profile
@@ -35,3 +37,8 @@ def generate_routes(app):
     # lists
     api.add_resource(DrList, "/admin/listDr")
     api.add_resource(PtList, "/admin/listPt")
+
+    # prescription
+    api.add_resource(CreatePrescription, "/create_prescription")
+    api.add_resource(PatientPrescriptions, "/patient_prescription_list")
+    api.add_resource(DrInfo, "/DrInfo")

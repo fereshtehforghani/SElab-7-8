@@ -1,8 +1,6 @@
 from datetime import datetime
-
 from flask import g
 from sqlalchemy import ForeignKey
-
 from api.conf.auth import auth, jwt
 from api.database.database import db
 
@@ -14,17 +12,24 @@ class User(db.Model):
     name = db.Column(db.String(length=10))
     password = db.Column(db.String(length=80))
     email = db.Column(db.String(length=80))
-    created = db.Column(db.DateTime, default=datetime.utcnow)
+    created = db.Column(db.DateTime, default=datetime.now)
     user_role = db.Column(db.String, default="user")
 
-    def generate_auth_token(self, permission_level):
-        if permission_level == 1:
-            token = jwt.dumps({"email": self.email, "admin": 1})
-            return token
-        elif permission_level == 2:
-            token = jwt.dumps({"email": self.email, "admin": 2})
-            return token
-        return jwt.dumps({"email": self.email, "admin": 0})
+    def generate_auth_token(self, permission_level, doc_or_pat="admin"):
+        if doc_or_pat == "admin":
+            if permission_level == 1:
+                token = jwt.dumps({"email": self.email, "admin": 1})
+                return token
+            elif permission_level == 2:
+                token = jwt.dumps({"email": self.email, "admin": 2})
+                return token
+        else:
+            if doc_or_pat == "doctor":
+                token = jwt.dumps({"email": self.email, "admin": 0, "user": 0})
+                return token
+            else:
+                token = jwt.dumps({"email": self.email, "admin": 0, "user": 1})
+                return token
 
     @staticmethod
     @auth.verify_token
