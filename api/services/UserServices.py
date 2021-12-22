@@ -1,5 +1,6 @@
 import logging
 # import jsonify
+from datetime import datetime
 
 from flask import g, request
 from flask_restful import Resource
@@ -169,3 +170,40 @@ class DrInfo(Resource):
         user = DrUser.query.filter_by(dr_id=dr_id).first()
         print(user)
         return {'role': 'Doctor', 'Name': '%s' % user.name, 'NezamID': '%s' % user.nezamID}
+
+
+class NewPatients(Resource):
+    @staticmethod
+    @auth.login_required
+    @role_required.permission(1)
+    def get():
+        try:
+            daily_pt_list = PtUser.query.all()
+            daily_pt_json = {}
+            for pt in daily_pt_list:
+                if pt.created.date() == datetime.today().date():
+                    daily_pt_json["%s" % pt.id] = {'NationalID': '%s' % pt.nationalID, 'Name': '%s' % pt.name,
+                                                   'Email': '%s' % pt.email, 'date_created': '%s' % pt.created}
+            return daily_pt_json
+        except Exception as why:
+            logging.error(why)
+            return error.INVALID_INPUT_422
+
+
+class NewDoctors(Resource):
+    @staticmethod
+    @auth.login_required
+    @role_required.permission(1)
+    def get():
+        try:
+            daily_dr_list = DrUser.query.all()
+            daily_dr_json = {}
+            for dr in daily_dr_list:
+                if dr.created.date() == datetime.today().date():
+                    daily_dr_json["%s" % dr.id] = {'NationalID': '%s' % dr.nationalID, 'Name': '%s' % dr.name,
+                                                   'Email': '%s' % dr.email, 'nezamID': '%s' % dr.nezamID,
+                                                   'date_created': '%s' % dr.created}
+            return daily_dr_json
+        except Exception as why:
+            logging.error(why)
+            return error.INVALID_INPUT_422

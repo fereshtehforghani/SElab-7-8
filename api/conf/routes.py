@@ -10,7 +10,7 @@ from api.services.UserServices import (
     PtProfile,
     DrList,
     PtList,
-    AdminProfile, DrInfo)
+    AdminProfile, DrInfo, NewPatients, NewDoctors)
 from api.services.aggregator import PatientPrescriptions
 
 
@@ -45,3 +45,5 @@ def generate_routes(app):
 
     #statistics
     api.add_resource(DailyPrescriptionList, "/daily_prescriptions")
+    api.add_resource(NewPatients, "/daily_new_patients")
+    api.add_resource(NewDoctors, "/daily_new_doctors")
