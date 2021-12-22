@@ -1,5 +1,7 @@
 import logging
-from flask import g, request
+from datetime import datetime
+
+from flask import g, request, jsonify
 from flask_restful import Resource
 
 import api.error.errors as error
@@ -46,3 +48,29 @@ class PrescriptionList(Resource):
         except Exception as why:
             logging.error(why)
             return error.INVALID_INPUT_422
+
+
+class DailyPrescriptionList(Resource):
+    @staticmethod
+    @auth.login_required
+    @role_required.permission(1)
+    def get():
+        try:
+            daily_presc_list = Prescription.query.all()
+            presc_json = {}
+            for dpl in daily_presc_list:
+                if dpl.created.date() == datetime.today().date():
+                    presc_json["%s" % dpl.prescription_id] = {'Dr_id': '%s' % dpl.doctor_id,
+                                                              'Patient_nat_id': '%s' % dpl.patient_nat_id,
+                                                              'drugs': '%s' % dpl.list_drug,
+                                                              'comments': '%s' % dpl.comments,
+                                                              'created': '%s' % dpl.created}
+            len_json = len(presc_json.keys())
+            presc_json["Daily_Prescription_count"] = len_json
+            return presc_json
+        except Exception as why:
+            logging.error(why)
+            return error.INVALID_INPUT_422
+
+
+

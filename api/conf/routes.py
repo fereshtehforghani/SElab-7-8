@@ -1,6 +1,6 @@
 from flask_restful import Api
 
-from api.services.PrescServices import CreatePrescription
+from api.services.PrescServices import CreatePrescription, DailyPrescriptionList
 from api.services.UserServices import (
     Index,
     RegisterDr,
@@ -42,3 +42,6 @@ def generate_routes(app):
     api.add_resource(CreatePrescription, "/create_prescription")
     api.add_resource(PatientPrescriptions, "/patient_prescription_list")
     api.add_resource(DrInfo, "/DrInfo")
+
+    #statistics
+    api.add_resource(DailyPrescriptionList, "/daily_prescriptions")
